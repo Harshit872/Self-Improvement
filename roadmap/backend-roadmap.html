@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Node.js Backend Roadmap for ACM</title>
+<style>
+  :root{
+    --bg:#EEF1F5; --paper:#FFFFFF; --ink:#14213D; --soft:#4A5670; --line:#D3DAE4;
+    --star:#B97800; --star-bg:#FFF4D6; --build:#0F766E; --build-bg:#E4F3F1; --accent:#2B4C9B;
+  }
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+  .wrap{max-width:760px;margin:0 auto;padding:0 16px 80px}
+  header{padding:28px 0 8px}
+  h1{font:700 30px/1.15 Charter,"Iowan Old Style",Georgia,serif;margin:0 0 8px;letter-spacing:-.01em}
+  .sub{color:var(--soft);margin:0 0 14px;max-width:60ch}
+  .legend{display:flex;flex-wrap:wrap;gap:6px 18px;font-size:14px;color:var(--soft);margin:0 0 6px}
+  .legend b{color:var(--star)}
+  .bar{position:sticky;top:0;z-index:5;background:var(--bg);padding:10px 0 12px;border-bottom:1px solid var(--line)}
+  .track{height:8px;background:var(--line);border-radius:99px;overflow:hidden}
+  .fill{height:100%;width:0;background:var(--accent);transition:width .25s}
+  .barrow{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:8px;font-size:14px;color:var(--soft)}
+  .btns{display:flex;gap:8px;flex-wrap:wrap}
+  button{font:inherit;font-size:13px;color:var(--ink);background:var(--paper);border:1px solid var(--line);border-radius:8px;padding:6px 10px;cursor:pointer}
+  button[aria-pressed="true"]{background:var(--star-bg);border-color:var(--star);color:#6B4600}
+  button:focus-visible,summary:focus-visible,input:focus-visible+span{outline:3px solid var(--accent);outline-offset:2px}
+  details.phase{background:var(--paper);border:1px solid var(--line);border-radius:12px;margin:14px 0}
+  details.phase>summary{list-style:none;cursor:pointer;padding:16px;display:grid;grid-template-columns:36px 1fr auto;gap:12px;align-items:start}
+  details.phase>summary::-webkit-details-marker{display:none}
+  .num{width:36px;height:36px;border-radius:50%;background:var(--ink);color:#fff;display:grid;place-items:center;font:600 15px Georgia,serif}
+  .ptitle{font:700 19px/1.25 Charter,Georgia,serif;margin:0}
+  .pmeta{font-size:13px;color:var(--soft);margin-top:2px}
+  .pcount{font-size:13px;color:var(--soft);white-space:nowrap;padding-top:4px}
+  .chev{display:inline-block;transition:transform .2s;margin-left:6px}
+  details[open]>summary .chev{transform:rotate(90deg)}
+  .body{padding:0 16px 18px}
+  .why{margin:0 0 14px;color:var(--soft);font-size:15px;padding-left:48px}
+  .grp{margin:18px 0 6px;padding-left:48px}
+  .grp h3{font:700 15.5px/1.3 system-ui,sans-serif;margin:0 0 6px;color:var(--accent)}
+  ul{list-style:none;margin:0;padding:0}
+  li{margin:0}
+  label.item{display:grid;grid-template-columns:22px 1fr;gap:10px;padding:7px 0;cursor:pointer;align-items:start}
+  label.item input{position:absolute;opacity:0;width:1px;height:1px}
+  label.item .box{width:20px;height:20px;border:2px solid #98A3B8;border-radius:5px;margin-top:2px;display:grid;place-items:center;background:#fff}
+  label.item input:checked+.box{background:var(--accent);border-color:var(--accent)}
+  label.item input:checked+.box::after{content:"";width:5px;height:10px;border:solid #fff;border-width:0 2px 2px 0;transform:rotate(45deg) translate(-1px,-1px)}
+  label.item input:checked~.txt{color:#7C879C}
+  .txt{font-size:15.5px}
+  li.star{background:var(--star-bg);border-left:3px solid var(--star);border-radius:0 8px 8px 0;margin:6px 0;padding:2px 10px 6px 10px}
+  li.star .t{font-weight:650}
+  li.star .t::before{content:"★ ";color:var(--star)}
+  .note{display:block;font-size:14px;color:#4B4A3A;margin-top:2px;font-weight:400}
+  .build{margin:20px 0 0 48px;border-left:4px solid var(--build);background:var(--build-bg);border-radius:0 10px 10px 0;padding:10px 14px}
+  .build strong{color:var(--build)}
+  .build p{margin:2px 0 0;font-size:15px}
+  .only-stars li:not(.star){display:none}
+  .only-stars .grp:not(:has(li.star)){display:none}
+  footer{color:var(--soft);font-size:13px;margin-top:26px}
+  @media (max-width:520px){
+    h1{font-size:25px}
+    .why,.grp{padding-left:0}.build{margin-left:0}
+    details.phase>summary{grid-template-columns:36px 1fr}
+    .pcount{grid-column:2}
+  }
+  @media print{
+    body{background:#fff;font-size:12px}
+    .bar,.btns,footer{display:none}
+    details.phase{break-inside:auto;border-color:#bbb}
+    li.star,.build{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+    li{break-inside:avoid}
+  }
+  @media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Node.js backend roadmap for ACM recruitment</h1>
+    <p class="sub">From fundamentals to system design, with the Spring-style backend core that Node tutorials skip, React for backend developers, and a light GenAI/RAG track. Each phase ends with something you build.</p>
+    <p class="legend"><span><b>★</b> turning point: it changes how you think about backend</span><span>Tick topics as you finish them</span></p>
+  </header>
+
+  <div class="bar" id="bar">
+    <div class="track"><div class="fill" id="fill"></div></div>
+    <div class="barrow">
+      <span id="progText">0 of 0 topics done</span>
+      <span class="btns">
+        <button id="starBtn" aria-pressed="false">Only ★</button>
+        <button id="openBtn">Expand all</button>
+      </span>
+    </div>
+  </div>
+
+  <main id="root"></main>
+  <footer>Progress lives in this page only and resets when you reload. To keep a copy, use your browser's Print and save as PDF; all phases open automatically for printing.</footer>
+</div>
+
+<script>
+// Item format: "plain topic"  or  ["turning-point topic", "mental model note"]
+const P = [
+{ t:"Web and language foundations", time:"Week 1", why:"Every later phase assumes you can read an HTTP exchange and write modern JS/TS without friction.", g:[
+ {n:"Networking and HTTP", i:[
+  "IP, DNS resolution, TCP vs UDP, ports, sockets",
+  "TLS handshake and what HTTPS actually protects",
+  ["HTTP in depth","A backend is a set of request-response contracts. Know methods and idempotency, status codes (400 vs 422, 401 vs 403, 409), headers, cookies, CORS preflight, Cache-Control and ETag, content negotiation."],
+  "HTTP/1.1 vs HTTP/2 vs HTTP/3, keep-alive, WebSocket upgrade",
+  "Proxy, reverse proxy, CDN basics"]},
+ {n:"Tools", i:[
+  "Linux terminal: ls, grep, find, curl, ps, kill, chmod, pipes, redirects",
+  "Git: branch, merge vs rebase, stash, resolving conflicts, clean commit messages",
+  "Postman or Thunder Client, environment variables, JSON"]},
+ {n:"JavaScript core", i:[
+  "var/let/const, hoisting, equality, truthy/falsy, type coercion",
+  ["Closures, scope, this, prototypes","Most Node bugs and interview questions come from these four. A closure is a function remembering the variables around it; this depends on how a function is called, not where it is written."],
+  "Destructuring, spread/rest, optional chaining, array methods (map, filter, reduce), immutability",
+  "Modules: CommonJS vs ES Modules, import/export, default vs named",
+  "Date and time handling, UTC vs local, Intl"]},
+ {n:"TypeScript (learn now, it is expected)", i:[
+  "Types, interfaces, unions, narrowing, generics, utility types (Partial, Pick, Omit, Record)",
+  "tsconfig, strict mode, type vs interface, enums vs unions, Zod for runtime types"]}
+ ], build:"Call a public API with curl and explain every request and response header. Then write a small TypeScript CLI that fetches and prints data." },
+
+{ t:"Node.js internals and async", time:"Week 1 to 2", why:"This is what separates 'I used Express' from 'I understand Node'. Interviewers love this phase.", g:[
+ {n:"Event loop and concurrency model", i:[
+  ["Event loop and its phases","Node runs your JS on one thread but never sits idle: slow I/O is handed to libuv and the OS, and a callback comes back when ready. Learn the order: timers, pending, poll, check (setImmediate), close, with microtasks (process.nextTick, promises) drained between steps."],
+  ["Blocking vs non-blocking","One CPU-heavy loop freezes every user because they share the single thread. Know what blocks (sync fs, big JSON.parse, crypto, regex backtracking) and how to offload it."],
+  "libuv thread pool: which operations use it (fs, dns.lookup, crypto, zlib), default size 4, UV_THREADPOOL_SIZE",
+  "Callbacks to Promises to async/await; Promise.all, allSettled, race, any",
+  "Error handling in async code, unhandledRejection, uncaughtException, why you should crash and restart",
+  "Timers: setTimeout, setInterval, setImmediate, nextTick, queueMicrotask; AbortController and cancellation"]},
+ {n:"Memory and V8", i:[
+  "Stack vs heap, V8 generational garbage collection",
+  "Common memory leaks: global caches, unremoved event listeners, closures, unbounded arrays",
+  "Heap snapshots, --inspect, Chrome DevTools profiling, --max-old-space-size"]},
+ {n:"Streams and buffers", i:[
+  ["Streams and backpressure","Process data in chunks instead of loading it all. Backpressure is the receiver telling the sender to slow down; pipeline() handles it for you and cleans up on errors."],
+  "Readable, Writable, Duplex, Transform; Buffer, encodings, binary data",
+  "Streaming file uploads/downloads, HTTP range requests"]},
+ {n:"Core modules and scaling one process", i:[
+  "fs (and fs/promises), path, os, events (EventEmitter), util, url, zlib, crypto, readline, net, dns",
+  "worker_threads (CPU work) vs cluster (many processes, one port) vs child_process (run other programs)",
+  "Module system internals: require cache, circular dependencies, package.json exports",
+  "npm: semver, lockfiles, scripts, npx, workspaces, npm audit, dependencies vs devDependencies vs peerDependencies",
+  "process: argv, env, signals (SIGTERM, SIGINT), exit codes"]}
+ ], build:"A CLI that uploads or copies a 1 GB file using streams with flat memory usage. Then predict the output order of a script mixing setTimeout, setImmediate, nextTick and promises, and verify it." },
+
+{ t:"CS core ACM asks (OOP, OS, DBMS, CN, DSA)", time:"Run in parallel, daily", why:"Club recruitment is usually a mix of projects and fundamentals. These are the questions that decide close rounds.", g:[
+ {n:"OOP", i:[
+  "Encapsulation, abstraction, inheritance, polymorphism; composition over inheritance",
+  "Abstract class vs interface, overloading vs overriding, coupling and cohesion"]},
+ {n:"Operating systems", i:[
+  "Process vs thread, context switch, scheduling algorithms, system calls",
+  ["Concurrency primitives","Race condition, critical section, mutex, semaphore, deadlock (four conditions and how to break them). These reappear in database locking, distributed locks and Node race bugs."],
+  "Virtual memory, paging, stack vs heap, file descriptors, IPC",
+  ["I/O models","Blocking, non-blocking, select/poll/epoll, async I/O. This is the real reason one Node thread can serve thousands of connections while Tomcat needs a thread per request."]]},
+ {n:"DBMS theory", i:[
+  "Keys, ER model, normalization (1NF to BCNF) and when to denormalize",
+  "ACID, transactions, indexing basics, SQL vs NoSQL, CAP overview"]},
+ {n:"Computer networks", i:[
+  "OSI vs TCP/IP, TCP three-way handshake, flow and congestion control",
+  "DNS flow, what happens when you type a URL and press enter (be able to narrate it fully)"]},
+ {n:"DSA", i:[
+  "Big-O, arrays, strings, hash maps, two pointers, sliding window",
+  "Linked list, stack, queue, binary search, sorting",
+  "Trees, BST, graphs (BFS/DFS), heaps, recursion and backtracking, DP basics",
+  "SQL practice: joins, group by, window functions on LeetCode or HackerRank"]}
+ ], build:"Solve 1 to 2 problems daily by pattern (target about 100). Write a one-page answer to 'what happens when I type a URL' and explain it aloud." },
+
+{ t:"HTTP servers and Express", time:"Week 2 to 3", why:"The first full backend you can show: clean layering, validation, errors, and proper REST.", g:[
+ {n:"Server basics", i:[
+  "Raw http module server first (parse URL, method, body by hand), then Express",
+  ["Middleware chain","A request flows through a pipeline of functions; each can change it, end it, or call next(). Auth, logging, validation and error handling are all middleware. Same idea as Spring's filter chain."],
+  "Routing, params, query strings, body parsers, static files, route modularization",
+  "Error-handling middleware (four arguments), async error propagation, custom error classes",
+  "Logging with pino or winston, request IDs, morgan",
+  "Config with dotenv, typed and validated at startup (fail fast on missing env)",
+  "Graceful shutdown (stop accepting, drain, close DB), health and readiness endpoints",
+  "Compression, helmet, CORS configuration, trust proxy"]},
+ {n:"Validation", i:[
+  "Validation with Zod or Joi, DTOs, never trusting client input (full API design is the next phase)"]},
+ {n:"Frameworks beyond Express", i:[
+  "Fastify: schema validation, hooks, plugin encapsulation, why it is faster",
+  "Hono/Koa awareness; know why Express 5 matters (native async error handling)"]}
+ ], build:"A CRUD REST API (routes, controllers, services, repositories) with validation, global error handler, pagination, Swagger docs and graceful shutdown." },
+
+{ t:"API design", time:"Week 3 (alongside Express)", why:"Anyone can make endpoints work. Good API design is making them predictable, safe to retry, and possible to change without breaking clients. It is a favourite interview and project-review topic.", g:[
+ {n:"Resource modeling and REST", i:[
+  ["Think in resources, not actions","Model nouns (orders, users, payments) and let HTTP verbs be the actions: GET /orders/42, not /getOrder?id=42. For real actions that are not CRUD, use a sub-resource such as POST /orders/42/cancel. Good modeling makes the rest of the API fall into place."],
+  "Plural nouns, nesting depth (stop at one or two levels), flat vs nested routes, naming consistency, no verbs in paths",
+  ["Safe and idempotent methods","GET is safe (no side effects). GET, PUT and DELETE are idempotent (repeat gives the same end state). POST is neither. This decides which requests clients and proxies may retry automatically."],
+  "PUT (replace) vs PATCH (partial): JSON Merge Patch vs JSON Patch; when POST is right",
+  "REST constraints: stateless, uniform interface, cacheable, layered; Richardson maturity model; HATEOAS and why it is rarely used",
+  "Long-running operations: return 202 Accepted with a status resource to poll, or a webhook on completion",
+  "Bulk operations and batch endpoints, soft delete vs hard delete in the API, file upload endpoints"]},
+ {n:"The contract: requests, responses and errors", i:[
+  ["Status codes you must get right","200, 201 with Location, 202, 204, 400 vs 422 (malformed vs invalid), 401 vs 403, 404, 409 conflict, 412, 429 with Retry-After, 500 vs 503. Wrong codes make clients guess."],
+  ["One error format everywhere","Use problem+json (RFC 7807): type, title, status, detail, plus stable machine-readable error codes and per-field validation errors. Never leak stack traces or SQL."],
+  "Response shape: envelope vs bare resource, consistent naming (camelCase or snake_case, pick one), null vs missing fields",
+  "ISO 8601 UTC dates, money as integer minor units or decimal strings (never floats), enums, opaque IDs (UUID/ULID) so clients cannot guess or parse them",
+  "Do not expose internal models: DTOs, mapping, hiding internal fields, response filtering",
+  "Content-Type and Accept, charset, 415 Unsupported Media Type, request size limits"]},
+ {n:"Collections: pagination, filtering, sorting", i:[
+  ["Cursor pagination","Offset pagination gets slow on big tables and skips or repeats rows when data changes. A cursor (keyset on an indexed column such as created_at plus id) stays fast and stable. Return nextCursor and hasMore."],
+  "Offset/limit vs page number vs cursor trade-offs; why total count is expensive and when to skip it",
+  "Filtering syntax (?status=paid&createdAfter=...), sorting (?sort=-createdAt), search vs filter, allow-listing sortable and filterable fields",
+  "Sparse fieldsets (?fields=) and expansion (?expand=customer) to avoid over-fetching and chatty clients"]},
+ {n:"Evolving an API without breaking people", i:[
+  ["Backward compatibility rules","Adding optional fields or endpoints is safe. Removing or renaming fields, changing types, tightening validation or changing meaning breaks clients. Design so most change is additive and clients ignore unknown fields."],
+  "Versioning: URL (/v1), header, media type; when you really need a new version",
+  "Deprecation process: Deprecation and Sunset headers, changelog, migration guides, usage tracking before removal",
+  "Contract-first with OpenAPI: write the spec, validate requests and responses against it, generate docs and client SDKs; contract testing (Pact) overview"]},
+ {n:"Reliability and safety of the API", i:[
+  ["Idempotency keys","Clients retry and networks duplicate. The client sends an Idempotency-Key header; the server stores the key with the result and returns the same response for repeats instead of charging twice. Essential for payments and order creation."],
+  ["Concurrency control with ETag and If-Match","Return an ETag for a resource; the client sends If-Match on update; if someone else changed it you answer 412 Precondition Failed. This is optimistic locking exposed over HTTP and prevents lost updates."],
+  "Rate limiting: 429, Retry-After, RateLimit headers, per-user vs per-IP vs per-key limits, quotas",
+  "Timeouts, retry guidance for clients (exponential backoff with jitter), safe retry only for idempotent calls",
+  "API authentication: bearer tokens, API keys, scopes and least privilege, per-endpoint authorization, CORS, never put secrets in URLs",
+  "Webhooks design: event IDs and types, signed payloads (HMAC), retries with backoff, replay protection, idempotent receivers"]},
+ {n:"Performance and caching at the API layer", i:[
+  "HTTP caching: Cache-Control, ETag with 304 Not Modified, Vary, private vs public, CDN caching of GETs",
+  "Compression (gzip/brotli), HTTP/2 multiplexing, keep-alive, payload size discipline",
+  "Avoid chatty APIs: batching, composite endpoints, N+1 in handlers, streaming large responses (NDJSON, SSE)"]},
+ {n:"Choosing an API style", i:[
+  ["REST vs GraphQL vs gRPC vs WebSocket","REST: simple, cacheable, public APIs. GraphQL: flexible queries for varied clients, but caching and N+1 need care. gRPC: fast typed service-to-service calls. WebSocket/SSE: server pushes. Answer with the use case, not a favourite."],
+  "BFF (backend for frontend), API gateway responsibilities, tRPC for end-to-end TypeScript apps",
+  "Documentation and developer experience: OpenAPI plus Swagger UI or Redoc, examples for every endpoint, Postman collection, documented error codes"]}
+ ], build:"Before writing code, design the OpenAPI spec for an e-commerce or booking system: resources, error format, cursor pagination, idempotent order creation, ETag updates, versioning plan. Then implement it with Zod validation and prove it with contract tests against the spec." },
+
+{ t:"Backend core: the Spring-world concepts Node tutorials skip", time:"Week 3 to 4", why:"Java/Spring courses teach engineering discipline; Node courses mostly teach syntax. Interviewers still ask these concepts, so learn the mental models here and map them to Node (NestJS is the closest equivalent).", g:[
+ {n:"Wiring and architecture", i:[
+  ["Inversion of Control and Dependency Injection","Do not create your dependencies inside a class; receive them. Then you can swap a real repository for a fake one in tests. Spring's container does the wiring automatically; in Node start with plain constructor injection, then see it automated by NestJS, tsyringe or awilix."],
+  "DI container concepts: providers, scopes (singleton, request, transient) and the lifecycle hooks (init and destroy, like onModuleInit and shutdown hooks)",
+  "Layered architecture: controller, service, repository. Controllers stay thin, services hold business rules, repositories talk to the DB",
+  "DTO vs entity vs domain model, mappers, why you never return a DB entity directly from an API",
+  ["Cross-cutting concerns (AOP)","Logging, auth, transactions, caching and timing are not business logic, so they get pulled out of it. Spring uses proxies and aspects. In Node you use middleware, decorators, and in NestJS guards, interceptors, pipes and exception filters."],
+  "Request lifecycle compared: servlet container with a thread per request, filter, interceptor, controller, exception handler vs Node's single event loop and middleware pipeline (and Nest's guard, interceptor, pipe, handler, filter order)",
+  "Proxy and decorator patterns, reflect-metadata and how decorators work under the hood",
+  "NestJS: modules, controllers, providers, guards, pipes, interceptors, custom decorators",
+  "12-factor app, config profiles (dev, staging, prod), secrets handling, feature flags"]},
+ {n:"Persistence internals (JPA and Hibernate mental models)", i:[
+  ["ORM mental model: entity, persistence context, unit of work","An ORM tracks the objects you loaded and, on flush, writes only what changed (dirty checking). Once you see this, mysterious extra updates, stale reads and lazy-loading errors all make sense. Prisma and TypeORM hide it; Hibernate and TypeORM's EntityManager expose it."],
+  "Entity lifecycle (new, managed, detached, removed), identity map and first-level cache, flush vs commit",
+  ["N+1 query problem","Loading a list and then lazily querying per row turns 1 query into 101. Fix with joins/include, batching or DataLoader. Learn to spot it in logs; interviewers ask for it by name."],
+  "Lazy vs eager loading, relationships (owning side, cascade, orphan removal), bidirectional pitfalls",
+  "Soft delete, audit columns (createdAt, updatedAt, createdBy), UUID vs auto-increment keys",
+  "Migrations (Flyway and Liquibase equivalents: Prisma Migrate, Knex, TypeORM), never edit an applied migration, expand/contract for zero-downtime changes",
+  "Repository pattern, query builders, projections, when to drop to raw SQL"]},
+ {n:"Transactions and concurrency", i:[
+  ["What a transaction annotation really does","It wraps a method in begin, commit and rollback, usually through a proxy. Know propagation (REQUIRED, REQUIRES_NEW, NESTED), rollback rules, why self-invocation bypasses the proxy, and why transactions must stay short and never wrap network calls."],
+  ["Isolation levels and anomalies","Dirty read, non-repeatable read, phantom read, write skew; read committed vs repeatable read vs serializable; how MVCC lets readers not block writers."],
+  "Optimistic locking (version column) vs pessimistic locking (SELECT FOR UPDATE), SKIP LOCKED for job queues, deadlock detection",
+  ["Race conditions in single-threaded Node","Single thread does not mean safe: read, await, then write lets another request slip in between (double spend, overbooking). Defend with unique constraints, atomic updates, transactions and locks."],
+  "Connection pools: sizing, exhaustion, timeouts (HikariCP's lessons apply to pg-pool)",
+  "Thread-per-request (and virtual threads) vs event loop: why Node excels at I/O and struggles with CPU",
+  "Retries, exactly-once myth, outbox pattern, saga overview"]},
+ {n:"Design principles and patterns", i:[
+  "SOLID with a concrete code example for each; DRY, KISS, YAGNI, Law of Demeter",
+  "Singleton, Factory, Builder, Strategy, Observer, Decorator, Adapter, Proxy, Template Method, Command",
+  ["Chain of Responsibility is your middleware","Express middleware and Spring filters are the same pattern. Spotting patterns inside tools you already use is how you answer 'where have you used this' in an interview."],
+  "Clean/Hexagonal architecture (ports and adapters), DDD vocabulary (entity, value object, aggregate, bounded context), CQRS and event sourcing awareness",
+  "Monolith vs modular monolith vs microservices, and why most projects should start with a modular monolith",
+  "Error strategy: domain errors vs HTTP errors, stable error codes, never leak stack traces"]},
+ {n:"Operability", i:[
+  "Structured logs, correlation IDs, metrics (rate, errors, duration), tracing with OpenTelemetry",
+  "Liveness vs readiness probes (the Actuator idea), config reload, graceful degradation"]}
+ ], build:"Rebuild your CRUD API in NestJS using DI, a global exception filter, audit columns and a transactional order-placement flow protected by optimistic locking. Write a test that proves two simultaneous orders cannot oversell stock." },
+
+{ t:"Databases", time:"Week 4 to 5", why:"Most backend performance and correctness problems live here.", g:[
+ {n:"SQL and PostgreSQL", i:[
+  ["SQL fluency","Joins, group by and having, subqueries, CTEs, window functions (row_number, rank, lag), set operations. Window functions and CTEs are common in interviews."],
+  ["Schema design","One-to-one, one-to-many, many-to-many with junction tables, foreign keys, constraints, normalization vs deliberate denormalization."],
+  ["Indexes and EXPLAIN","B-tree structure, composite index column order, covering indexes, partial indexes, why indexes slow writes, reading EXPLAIN ANALYZE to see scans vs index lookups."],
+  "Transactions in practice, VACUUM and MVCC awareness, JSONB, full-text search, pgvector (used later for RAG)",
+  "Connection pooling (pg-pool, PgBouncer), prepared statements, pagination at scale"]},
+ {n:"ORMs and tooling", i:[
+  "Prisma or Drizzle (pick one deeply) plus Knex/raw SQL, migrations, seeding",
+  "Testing with a real database (Testcontainers or docker-compose)"]},
+ {n:"MongoDB", i:[
+  "Documents, embedding vs referencing, aggregation pipeline, indexes, schema design trade-offs",
+  "When Mongo is the right choice and when Postgres JSONB is better"]},
+ {n:"Redis", i:[
+  "Strings, hashes, lists, sets, sorted sets, TTL, pub/sub, streams, atomic ops (INCR)",
+  "Use cases: cache, rate limiter, session store, leaderboard, distributed lock (and its caveats)",
+  "Persistence (RDB vs AOF), eviction policies"]}
+ ], build:"E-commerce schema with migrations, indexes verified with EXPLAIN, a transactional checkout, and a Redis cache in front of the product list." },
+
+{ t:"Authentication and security", time:"Week 5", why:"Every real product needs it, and every interview probes it.", g:[
+ {n:"Authentication", i:[
+  "Hashing vs encryption vs encoding, bcrypt/argon2, salting, peppering",
+  ["Sessions vs JWT","Sessions keep state on the server and are easy to revoke. JWTs are self-contained and scale statelessly but are hard to revoke. Know access plus refresh token flow, rotation, reuse detection, and where to store tokens."],
+  "OAuth2 and OpenID Connect flows (authorization code with PKCE), Google login, SSO idea",
+  "Authorization: RBAC vs ABAC, ownership checks, authentication vs authorization, security context per request",
+  "Cookies: HttpOnly, Secure, SameSite; password reset and email verification flows; MFA/TOTP"]},
+ {n:"Application security", i:[
+  ["OWASP Top 10","SQL injection, XSS, CSRF, SSRF, IDOR/broken access control, mass assignment, security misconfiguration. For each: how the attack works, how your code prevents it."],
+  "Helmet, CSP, rate limiting and brute-force protection, input sanitization, dependency auditing",
+  "Secrets management, HTTPS everywhere, CORS done right, audit logging"]}
+ ], build:"Full auth system: signup, login, email verification, refresh rotation, logout, roles, rate limiting, and a short written threat model of your own API." },
+
+{ t:"Advanced backend patterns", time:"Week 5 to 6", why:"The tools that make systems resilient, fast and real-time.", g:[
+ {n:"Caching and async work", i:[
+  ["Caching strategies","Cache-aside, write-through, write-back, TTL, invalidation (the hard part), cache stampede and how to prevent it, HTTP caching and CDN caching."],
+  ["Message queues","BullMQ or RabbitMQ first, Kafka concepts after: producers, consumers, acknowledgements, retries with backoff, dead-letter queues, ordering, idempotent consumers."],
+  "Background jobs, cron, scheduled tasks, webhooks (sending, receiving, verifying signatures)",
+  "Event-driven design, pub/sub, event emitters inside a process vs a broker across services"]},
+ {n:"Real-time and I/O", i:[
+  "WebSockets and Socket.IO (rooms, auth, scaling with Redis adapter), Server-Sent Events, long polling",
+  "File uploads: multer, S3 presigned URLs, multipart, virus/size/type checks",
+  "Email via SMTP or provider API, SMS, payments basics (Razorpay or Stripe, webhooks, reconciliation)"]},
+ {n:"API styles", i:[
+  "GraphQL basics: schema, resolvers, N+1 and DataLoader, when not to use it",
+  "gRPC and protobuf awareness, tRPC awareness",
+  "Search with Elasticsearch/OpenSearch or Postgres full-text"]}
+ ], build:"Async notification pipeline: API enqueues, worker sends email with retries and dead-letter handling, plus a live chat using WebSockets with Redis pub/sub." },
+
+{ t:"HTML, CSS and Tailwind", time:"Week 6", why:"Tailwind is CSS with shortcuts, so it only feels easy if the CSS underneath makes sense. Learn the layout model once, then Tailwind lets you build screens fast.", g:[
+ {n:"HTML and CSS you need first", i:[
+  "Semantic HTML (header, nav, main, section, article, button vs div), forms and input types, landmarks for accessibility",
+  "Box model, box-sizing, display types, position (static, relative, absolute, fixed, sticky), overflow, z-index and stacking contexts",
+  ["Flexbox and Grid","Flexbox lays out in one direction (rows or columns), Grid in two. Nearly every layout is one of them: navbars and button rows are flex, page shells and card galleries are grid. Know alignment (justify, align, gap), wrapping and how items grow and shrink."],
+  ["Cascade, specificity and inheritance","Which rule wins when two apply: importance, specificity, then source order. Most 'my style is not applying' bugs are this. DevTools shows you exactly which rule won."],
+  "Units: px, rem, em, %, vw/vh, dvh on mobile; typography basics, line-height, font loading",
+  "Responsive design: mobile-first, media queries, container queries, fluid sizing with clamp(), images (srcset, object-fit)",
+  "CSS variables, pseudo-classes and pseudo-elements, transitions and animations, prefers-color-scheme and prefers-reduced-motion",
+  "Browser DevTools: inspect, computed styles, box model view, device emulation"]},
+ {n:"Tailwind core", i:[
+  ["Utility-first mental model","Instead of inventing class names and writing CSS in a separate file, you compose small single-purpose classes in the markup (flex, p-4, text-sm). You get no naming fights, no dead CSS, and a constrained spacing and colour scale that keeps the design consistent."],
+  "Setup with Vite and React (v4 uses a CSS-first @import and @theme; v3 used tailwind.config.js, so recognise both)",
+  "Spacing scale, sizing, typography, colours and opacity, borders, rounded corners, shadows, rings",
+  "Layout utilities: flex, grid, gap, container, aspect-ratio, position, overflow, z-index",
+  ["Responsive and state variants","Prefixes apply a class under a condition: md:flex, hover:bg-blue-600, focus-visible:ring, disabled:opacity-50, dark:bg-slate-900, group-hover and peer for parent and sibling states. Mobile-first means unprefixed classes are the base and sm:, md:, lg: layer on top."],
+  "Arbitrary values (w-[320px]), arbitrary variants, important modifier, negative values",
+  ["How Tailwind finds your classes","It scans your source for complete class strings and generates only those. A dynamic name like text-${colour}-500 is never generated and silently fails. Write full class names or map values to complete strings."],
+  "Customising the theme: colours, fonts, breakpoints, spacing; extending vs overriding; design tokens",
+  "@apply and @layer components: use sparingly, prefer extracting a React component instead"]},
+ {n:"Building real UI with Tailwind", i:[
+  "Reusable components in React: Button, Input, Card, Modal with variants and sizes",
+  "clsx plus tailwind-merge (a cn helper) to combine and override classes safely; class-variance-authority for variants",
+  "shadcn/ui and Radix UI: headless accessible primitives you style yourself (dialogs, dropdowns, tabs)",
+  "Common layouts: responsive navbar with mobile menu, sidebar dashboard, card grid, forms, tables, empty and loading states, skeletons",
+  "Dark mode toggle (class strategy) with persisted preference; typography and forms plugins",
+  "Accessibility with Tailwind: visible focus rings, colour contrast, sr-only text, touch target size",
+  "Tooling: prettier-plugin-tailwindcss for class order, IntelliSense extension, keeping markup readable",
+  "Trade-offs: Tailwind vs CSS Modules vs styled-components vs plain CSS, and when each is the better choice"]}
+ ], build:"Rebuild a real site's layout (for example a landing page and a dashboard) with Tailwind: fully responsive from 360px up, dark mode, reusable Button and Input components with variants, and keyboard-friendly focus states." },
+
+{ t:"React for backend developers", time:"Week 6 to 7", why:"You do not need to be a frontend specialist, but a club project means you can wire a UI to your API and explain it.", g:[
+ {n:"Core React", i:[
+  "JSX, components, props, children, composition, conditional rendering, lists and keys",
+  ["Rendering model","UI is a function of state. A state change re-runs the component, React diffs the result (reconciliation) and patches the DOM. Understand why keys matter and why state must be updated immutably."],
+  "Controlled vs uncontrolled inputs, form handling, lifting state up, prop drilling and its fixes",
+  "Events and synthetic events, event bubbling vs capturing, refs and the DOM, portals, fragments",
+  "Component design: container vs presentational, composition vs props explosion, compound components, render props and HOCs (know them, prefer hooks)",
+  "State updates are batched and asynchronous: functional updates (setCount(c => c + 1)), why mutating state breaks rendering",
+  "Derived state: compute during render instead of syncing with an effect ('you might not need an effect')"]},
+ {n:"Hooks", i:[
+  "useState, useEffect (dependency array, cleanup, why effects run twice in dev StrictMode), useRef",
+  ["Hooks rules and stale closures","Hooks rely on call order, and an effect or handler captures the values from the render it was created in. Most 'my state is old' bugs are stale closures."],
+  "useMemo, useCallback, useContext, useReducer, custom hooks, useId, useTransition and useDeferredValue overview"]},
+ {n:"Data, routing and state", i:[
+  "Fetching: loading and error states, race conditions, AbortController, TanStack Query for caching and refetching",
+  "React Router: nested routes, protected routes, params, lazy routes",
+  "Global state: Context vs Redux Toolkit vs Zustand; server state vs client state",
+  "Frontend auth: where to keep tokens, refresh handling with interceptors, CORS and cookies with your API"]},
+ {n:"Quality and the wider ecosystem", i:[
+  "Performance: React.memo, code splitting, lazy and Suspense, virtualization, measuring with the Profiler",
+  "Error boundaries, accessibility basics, Tailwind CSS, Vite",
+  "Testing with React Testing Library; Next.js basics: CSR vs SSR vs SSG vs ISR, route handlers, Server Components awareness"]}
+ ], build:"A React client for your auth and e-commerce APIs: login, protected routes, product list with TanStack Query, and an optimistic cart update." },
+
+{ t:"React in real apps (data, auth, performance, Next.js)", time:"Week 7", why:"The first React phase teaches how components work. This one covers what real projects and review rounds ask: talking to your API correctly, handling auth, keeping it fast, and structuring the code.", g:[
+ {n:"Talking to your backend", i:[
+  ["Server state is not client state","Data that lives on your server (products, orders) needs caching, refetching, invalidation and loading/error handling. TanStack Query (or RTK Query) owns that; useState and Redux should hold only true UI state. Mixing them is the root of most messy React apps."],
+  "TanStack Query: query keys, staleTime vs gcTime, invalidation after mutations, retries, prefetching, dependent queries",
+  ["Optimistic updates","Update the UI immediately, send the mutation, and roll back on failure. Pair it with your idempotent API design so a retry cannot duplicate the action."],
+  "Infinite scroll and pagination against cursor-based APIs (useInfiniteQuery), debounced search, request cancellation with AbortController",
+  "Axios or fetch wrapper with interceptors: attach token, refresh on 401 once, central error mapping to problem+json fields",
+  "Forms: React Hook Form with Zod, field-level server errors, share validation schemas with the backend, file upload with progress"]},
+ {n:"Authentication in the browser", i:[
+  ["Where tokens live","localStorage is readable by any XSS. A common safer pattern: short-lived access token in memory plus refresh token in an HttpOnly, Secure, SameSite cookie. Cookies bring CSRF concerns, so know both sides of the trade-off."],
+  "Silent refresh, protected routes, redirecting back after login, logout across tabs, session expiry UX",
+  "Role-based UI is only a UX convenience; the backend must enforce every permission",
+  "OAuth redirect flow in a SPA (authorization code with PKCE), handling the callback route"]},
+ {n:"State architecture", i:[
+  ["Choose the right kind of state","Local component state, URL state (filters, page), form state, server state, and global client state each have a best home. Put things in the URL so refresh and sharing work."],
+  "Context and why a changing value re-renders every consumer; splitting contexts; Zustand and Redux Toolkit (slices, selectors) for real global state",
+  "useReducer and state machines for complex flows (checkout steps, upload states)"]},
+ {n:"Real-time and AI interfaces", i:[
+  "WebSocket and SSE inside hooks: connect, cleanup, reconnect with backoff, heartbeat",
+  "Chat UI patterns: optimistic messages, scroll anchoring, typing and presence indicators",
+  "Rendering streamed LLM responses token by token (fetch streams or SSE), stop/regenerate, showing source citations for RAG answers"]},
+ {n:"Performance", i:[
+  ["Why components re-render","A component re-renders when its state or props change, or its parent re-renders. memo, useMemo and useCallback help only when you have measured a real problem; adding them everywhere adds cost and bugs. Use the Profiler first."],
+  "Code splitting with lazy and Suspense, route-level splitting, bundle analysis, tree shaking",
+  "List virtualization, avoiding expensive work in render, stable keys, image optimization and lazy loading",
+  "Core Web Vitals (LCP, INP, CLS) and what causes each to be bad; React Compiler awareness"]},
+ {n:"Next.js and rendering strategies", i:[
+  ["CSR vs SSR vs SSG vs ISR","Where and when HTML is produced decides speed, SEO and server cost. CSR: browser builds the page. SSR: server builds per request. SSG: built at build time. ISR: static with timed regeneration. Be able to pick one for a dashboard, a blog and a product page."],
+  "Hydration and hydration mismatch errors, Server Components vs Client Components and the 'use client' boundary, server actions awareness",
+  "App Router: layouts, route handlers, middleware, loading and error files, caching layers in Next.js, env variables and what leaks to the browser",
+  "Deploying: Vercel, or static export behind Nginx; environment configuration per stage"]},
+ {n:"Project structure and quality", i:[
+  "Feature-based folder structure, absolute imports, shared UI components, custom hooks wrapping API calls",
+  "TypeScript with React: typing props, events, generics, discriminated unions for component variants, typing API responses from the OpenAPI spec",
+  "Error boundaries and Suspense boundaries, loading, empty and error states for every screen",
+  "Accessibility: semantic HTML, labels, keyboard navigation, focus management, ARIA only when needed",
+  "Testing: React Testing Library for behaviour, MSW to mock the API, Playwright for a few end-to-end flows",
+  "Tailwind or CSS modules, responsive layout, design tokens; Vite config, env handling, linting with ESLint and Prettier"]},
+ {n:"React interview questions to answer aloud", i:[
+  "What is the virtual DOM and reconciliation, and why do keys matter?",
+  "Why does useEffect run twice in development, and when do you need a cleanup function?",
+  "What is a stale closure? Show one and fix it",
+  "useMemo vs useCallback vs React.memo: when do they help and when do they hurt?",
+  "Controlled vs uncontrolled components; useEffect vs useLayoutEffect",
+  "How would you stop an entire tree re-rendering when Context changes?",
+  "Where would you store the access token, and what are the risks of each option?",
+  "CSR vs SSR vs SSG for a given page, with reasons"]}
+ ], build:"Full-stack capstone: a React or Next.js app on your own API with login, protected routes, cursor-based infinite scroll, optimistic updates with rollback, a live chat or streamed AI answer, tests with MSW, and a deployed URL." },
+
+{ t:"GenAI and RAG (light, practical)", time:"Week 7", why:"Enough to build and explain a working retrieval-augmented app from a Node backend, without a deep ML detour.", g:[
+ {n:"LLMs as a backend dependency", i:[
+  "Tokens, context window, temperature and top-p, system vs user prompts, why models hallucinate",
+  "Calling LLM APIs from Node, streaming responses over SSE, timeouts, retries, rate limits, cost tracking",
+  "Structured output (JSON schema, validated with Zod) and tool/function calling",
+  "Prompt basics: clear instructions, few-shot examples, delimiting untrusted input"]},
+ {n:"Embeddings and vector search", i:[
+  ["Embeddings and similarity","An embedding turns text into a vector so that similar meaning means nearby vectors. Search becomes nearest-neighbour lookup using cosine similarity. That single idea powers semantic search."],
+  "Vector stores: pgvector (easiest if you already know Postgres), Qdrant, Pinecone, Chroma; ANN indexes (HNSW, IVF) at concept level"]},
+ {n:"The RAG pipeline", i:[
+  ["RAG end to end","Ingest, chunk, embed, store; then at query time embed the question, retrieve top-k chunks, build a prompt with them, generate an answer grounded in that context with citations. Most quality problems are retrieval problems, not model problems."],
+  "Chunking strategies: size, overlap, structure-aware (headings, tables); metadata filtering",
+  "Hybrid search (BM25 plus vectors), reranking, query rewriting",
+  "Evaluation: retrieval recall@k, faithfulness, answer relevance; build a small test set",
+  "Production concerns: prompt injection, PII, caching, latency and cost, guardrails, fallback when nothing relevant is found"]},
+ {n:"Tooling and awareness", i:[
+  "Vercel AI SDK, LangChain.js or LlamaIndex.TS (use once, understand what they hide)",
+  "Agents and MCP at overview level: tools, loops, when an agent is overkill"]}
+ ], build:"A PDF question-answering API (for example over a set of GST circulars or any document set) with pgvector, streaming answers and source citations. Add a 20-question eval set and report recall@k." },
+
+{ t:"Testing, DevOps and cloud", time:"Week 7 to 8", why:"Shipping and proving it works is half of backend work.", g:[
+ {n:"Testing", i:[
+  "Test pyramid: unit, integration, end to end; Jest or Vitest, Supertest",
+  "Mocks vs stubs vs fakes (DI makes this easy), test databases, fixtures, coverage as a signal not a goal"]},
+ {n:"Delivery", i:[
+  "Docker: images, layers, multi-stage builds, docker-compose, volumes, networks",
+  "CI/CD with GitHub Actions, environment separation, secrets in pipelines",
+  "Nginx as a reverse proxy, TLS, PM2 vs container restarts, zero-downtime deploys, blue-green and canary overview",
+  "Cloud basics: EC2 or equivalent, S3, RDS, IAM, VPC at concept level; Kubernetes awareness"]},
+ {n:"Observability and performance", i:[
+  "Prometheus and Grafana awareness, alerting basics, load testing with k6 or autocannon",
+  "Profiling Node: --inspect, flame graphs, clinic.js"]}
+ ], build:"Dockerize your projects, add tests and a CI pipeline, deploy to a cloud VM behind Nginx with HTTPS, and load test one endpoint." },
+
+{ t:"System design (HLD)", time:"Week 8 to 10", why:"Learn it as a repeatable framework, not memorized answers: requirements, estimation, API, data model, diagram, deep dive, bottlenecks.", g:[
+ {n:"Foundations", i:[
+  "Functional vs non-functional requirements, SLA/SLO, latency vs throughput, availability math",
+  ["Back-of-envelope estimation","Convert users into QPS, storage and bandwidth in two minutes. It tells you whether you need one database or sharding, so it is the step that justifies every later choice."],
+  "Vertical vs horizontal scaling, stateless services, session handling across servers",
+  ["Load balancing","L4 vs L7, algorithms (round robin, least connections, consistent hashing), health checks, sticky sessions and why to avoid them."],
+  "Reverse proxy, API gateway, CDN, DNS-based routing"]},
+ {n:"Data at scale", i:[
+  ["CAP and PACELC, consistency models","During a partition you choose consistency or availability; otherwise you trade latency vs consistency. Know strong, eventual, causal and read-your-writes consistency."],
+  ["Replication, partitioning and sharding","Leader-follower, multi-leader, leaderless, replication lag; range vs hash sharding, hot keys, resharding with consistent hashing, cross-shard queries and transactions."],
+  "SQL vs NoSQL selection, polyglot persistence, object storage, search engines and inverted indexes",
+  "Caching layers (client, CDN, app, DB), eviction policies (LRU, LFU), write patterns"]},
+ {n:"Communication and resilience", i:[
+  ["Async and event-driven design","Queues, pub/sub, Kafka (topics, partitions, consumer groups), outbox pattern, change data capture. Decoupling is how systems absorb spikes."],
+  "Microservices vs monolith, service discovery, sync vs async calls, API versioning between services",
+  "Rate limiting algorithms: token bucket, leaky bucket, fixed and sliding window",
+  "Circuit breaker, retries with exponential backoff and jitter, timeouts, bulkheads, backpressure, graceful degradation",
+  "Distributed transactions: two-phase commit vs saga; idempotency; distributed locks; consensus (Raft, Paxos) awareness",
+  "Unique ID generation (Snowflake, UUID, ULID), bloom filters, geohashing and quadtrees, heartbeats and gossip"]},
+ {n:"Classic designs to practice (and what each teaches)", i:[
+  "URL shortener: ID generation, read-heavy caching, analytics",
+  "Rate limiter: algorithms, Redis atomicity, distributed counting",
+  "Chat app (WhatsApp): WebSockets, presence, delivery guarantees, fan-out",
+  "News feed: fan-out on write vs on read, celebrity problem",
+  "Notification system: queues, retries, dedupe, user preferences",
+  "Ticket booking: concurrency, locks, holds with TTL, overbooking",
+  "YouTube/Netflix: blob storage, transcoding pipeline, CDN",
+  "Uber: geospatial indexing, matching, location streams",
+  "Distributed cache: consistent hashing, eviction, replication",
+  "Google Drive/Dropbox: chunking, sync, deduplication; typeahead search: trie and ranking; web crawler: politeness and dedupe"]}
+ ], build:"Do 8 of the designs above on paper in 35 minutes each, then explain one aloud to a friend with no diagrams prepared." },
+
+{ t:"Low-level design (LLD)", time:"Week 9 to 10", why:"ACM rounds often pair HLD with a class-design question. Clean, extensible code on a whiteboard wins.", g:[
+ {n:"Principles and patterns", i:[
+  "SOLID applied to real problems, UML class and sequence diagrams",
+  "Strategy, Factory, Observer, State, Decorator, Singleton, Builder, Command in context",
+  "Concurrency in design: thread safety, locking granularity, immutability"]},
+ {n:"Problems to practice", i:[
+  "Parking lot, library management, vending machine, elevator system",
+  "LRU cache, rate limiter class, logger framework, pub/sub system",
+  "Splitwise, BookMyShow, tic-tac-toe or chess, notification service"]}
+ ], build:"Implement three of the problems above in TypeScript with interfaces, tests, and a short note explaining which pattern you used and why." },
+
+{ t:"General engineering topics", time:"Sprinkle through every week", why:"The things nobody puts in a roadmap but every working developer needs: debugging, data formats, team practices and reading other people's code. These are what separate a student project from engineering.", g:[
+ {n:"Debugging and daily toolkit", i:[
+  ["A debugging method","Reproduce the bug, shrink it, form a hypothesis, test one change at a time, and use git bisect when you do not know which commit broke it. Random edits are not debugging. Read the error and the stack trace fully before touching code."],
+  "Debugger with breakpoints (VS Code and node --inspect), logging levels, reading logs, network tab, curl for isolating client vs server",
+  "Shell scripting basics, SSH and key pairs, cron syntax, environment variables, file permissions, processes and ports (lsof, netstat)",
+  "Regular expressions (and ReDoS danger), jq for JSON, grep, sed and awk basics",
+  "Reading documentation and source code of libraries you depend on; searching issues before asking"]},
+ {n:"Data, encoding and gotchas", i:[
+  "Formats: JSON, YAML, XML, CSV, Protobuf, and when to pick each; schema validation",
+  "Encodings: Unicode and UTF-8, Base64 (encoding, not encryption), URL encoding, hex, hashing vs checksums; UUID, ULID, auto-increment",
+  ["Time, money and floats","Store time in UTC and convert at the edge, beware DST and time zones. Floating point cannot represent 0.1 exactly, so money is stored as integer minor units or decimals. These three cause more production bugs than most algorithms."],
+  "Locale and i18n basics, character sets, sorting and case rules, null handling across layers",
+  "Browser fundamentals: same-origin policy, cookies vs localStorage vs sessionStorage vs IndexedDB, rendering pipeline overview, how a page loads"]},
+ {n:"Software engineering practice", i:[
+  "SDLC, Agile, Scrum and Kanban basics, user stories, estimation and why estimates are wrong",
+  "Git workflows: trunk-based vs Gitflow, small PRs, rebasing, conventional commits, semantic versioning, changelogs",
+  "Code review: how to give and receive it, what reviewers look for, writing PR descriptions",
+  ["Clean code and trade-offs","Good names, small functions, one level of abstraction, comments that explain why. Every design is a trade-off (speed, cost, complexity, time), and stating the trade-off you made is the skill interviewers listen for."],
+  "Refactoring safely with tests, technical debt, abstractions that leak, premature optimization vs measured optimization",
+  "Documentation: README, architecture diagrams (C4 basics), ADRs (architecture decision records), API docs, runbooks"]},
+ {n:"Project hygiene and safety", i:[
+  "ESLint, Prettier, type checking, pre-commit hooks (Husky, lint-staged), commitlint",
+  "Dependency management: lockfiles, updating safely, supply-chain risks, npm audit, Dependabot or Renovate",
+  "Open-source licences (MIT, Apache 2.0, GPL) and what they allow; never committing secrets and what to do if you do",
+  "Feature flags, environment parity, backups and restore drills, incident basics (detect, mitigate, write a postmortem)"]},
+ {n:"Working in a club and growing", i:[
+  "Contributing to open source: find a good-first-issue, fork, branch, PR, respond to review",
+  "Working in a team: owning a task end to end, asking good questions with context, status updates, giving demos",
+  "Communication: explaining a technical choice to a non-technical person, thinking aloud while solving, writing clearly",
+  "Portfolio: GitHub profile README, pinned projects with live links, a short resume with measurable outcomes, LinkedIn",
+  "Learning habits: build to learn, read others' code, revise with spaced repetition, time-box and ship"]}
+ ], build:"Send one real pull request to an open-source project. Set up Husky, lint-staged and commitlint with a CI check on one of your repos, and write an ADR explaining one major technical decision in your project." },
+
+{ t:"Interview kit", time:"Final 2 weeks", why:"Convert knowledge into answers. The goal is to explain choices, not recite tools.", g:[
+ {n:"Questions to answer out loud", i:[
+  "Why is Node good for I/O but bad for CPU work, and how would you fix it?",
+  "Explain the event loop order of nextTick, promises, setTimeout and setImmediate",
+  "How does a request travel from browser to database and back?",
+  "JWT vs sessions: when would you pick each, and how do you revoke a JWT?",
+  "How do you prevent two users buying the last item? (locks, constraints, idempotency)",
+  "What is the N+1 problem and how do you detect and fix it?",
+  "Where would you add a cache, what happens on invalidation, how do you stop a stampede?",
+  "SQL vs NoSQL for a given product, with reasons",
+  "Explain dependency injection and why it helps testing",
+  "Design a URL shortener or rate limiter end to end",
+  "What would you do if the API suddenly becomes slow in production?"]},
+ {n:"Proof of work", i:[
+  "Two deployed projects you can defend line by line (schema choices, auth, failure cases)",
+  "README per project: architecture diagram, trade-offs, how to run, what you would change at 100x scale",
+  "Clean GitHub: meaningful commits, tests, CI badge"]},
+ {n:"If you only have 3 weeks", i:[
+  "Week 1: HTTP, JS core, event loop, Express layering, SQL and indexes",
+  "Week 2: auth (JWT, sessions), transactions and locking, caching, queues, 1 deployed project",
+  "Week 3: system design framework with 5 classic designs, LLD basics, DSA daily, mock interviews"]}
+ ], build:"Do two mock interviews with a senior or friend: one project deep-dive, one system design. Fix the gaps they find." }
+];
+
+const root = document.getElementById('root');
+let uid = 0;
+P.forEach((p, idx) => {
+  const d = document.createElement('details');
+  d.className = 'phase';
+  if (idx === 0) d.open = true;
+  let total = 0;
+  const groups = p.g.map(g => {
+    const items = g.i.map(it => {
+      total++;
+      const star = Array.isArray(it);
+      const id = 'c' + (uid++);
+      return '<li class="' + (star ? 'star' : '') + '"><label class="item" for="' + id + '">' +
+        '<input type="checkbox" id="' + id + '"><span class="box"></span>' +
+        '<span class="txt"><span class="t">' + (star ? it[0] : it) + '</span>' +
+        (star ? '<span class="note">' + it[1] + '</span>' : '') + '</span></label></li>';
+    }).join('');
+    return '<div class="grp"><h3>' + g.n + '</h3><ul>' + items + '</ul></div>';
+  }).join('');
+  d.innerHTML =
+    '<summary><span class="num">' + idx + '</span><div><h2 class="ptitle">' + p.t + '</h2>' +
+    '<div class="pmeta">' + p.time + '</div></div><span class="pcount"><span class="done">0</span>/' + total + '<span class="chev">&#9656;</span></span></summary>' +
+    '<div class="body"><p class="why">' + p.why + '</p>' + groups +
+    '<div class="build"><strong>Build</strong><p>' + p.build + '</p></div></div>';
+  root.appendChild(d);
+});
+
+const fill = document.getElementById('fill');
+const progText = document.getElementById('progText');
+function update() {
+  const all = root.querySelectorAll('input[type=checkbox]');
+  const done = root.querySelectorAll('input[type=checkbox]:checked');
+  fill.style.width = (all.length ? done.length / all.length * 100 : 0) + '%';
+  progText.textContent = done.length + ' of ' + all.length + ' topics done';
+  root.querySelectorAll('details.phase').forEach(d => {
+    d.querySelector('.done').textContent = d.querySelectorAll('input:checked').length;
+  });
+}
+root.addEventListener('change', update);
+update();
+
+const starBtn = document.getElementById('starBtn');
+starBtn.addEventListener('click', () => {
+  const on = starBtn.getAttribute('aria-pressed') !== 'true';
+  starBtn.setAttribute('aria-pressed', on);
+  root.classList.toggle('only-stars', on);
+});
+
+const openBtn = document.getElementById('openBtn');
+openBtn.addEventListener('click', () => {
+  const ds = root.querySelectorAll('details.phase');
+  const anyClosed = [...ds].some(d => !d.open);
+  ds.forEach(d => d.open = anyClosed);
+  openBtn.textContent = anyClosed ? 'Collapse all' : 'Expand all';
+});
+
+window.addEventListener('beforeprint', () => root.querySelectorAll('details.phase').forEach(d => d.open = true));
+</script>
+</body>
+</html>
